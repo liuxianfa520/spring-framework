@@ -16,6 +16,8 @@
 
 package org.springframework.beans.factory.xml;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+import org.springframework.tests.sample.beans.HelloService;
 import org.xml.sax.InputSource;
 
 import org.springframework.aop.framework.ProxyFactory;
@@ -119,11 +122,19 @@ public class XmlBeanFactoryTests {
 	private static final ClassPathResource DEFAULT_LAZY_CONTEXT = classPathResource("-defaultLazyInit.xml");
 	private static final ClassPathResource DEFAULT_AUTOWIRE_CONTEXT = classPathResource("-defaultAutowire.xml");
 
+	private static final ClassPathResource HELLO_SERVICE_CONTEXT = classPathResource("-HelloService.xml");
+
 	private static ClassPathResource classPathResource(String suffix) {
 		return new ClassPathResource(CLASSNAME + suffix, CLASS);
 	}
 
-
+    @Test
+    public void testHelloService() {
+        DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+        new XmlBeanDefinitionReader(factory).loadBeanDefinitions(HELLO_SERVICE_CONTEXT);
+        HelloService bean = ((HelloService) factory.getBean("bean"));
+        bean.hello();
+    }
 	@Test  // SPR-2368
 	public void testCollectionsReferredToAsRefLocals() {
 		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();

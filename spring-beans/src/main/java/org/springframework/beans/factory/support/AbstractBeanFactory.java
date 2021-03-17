@@ -450,7 +450,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 
 		// Check if required type matches the type of the actual bean instance.
-		// 检查所需类型是否与实际bean实例的类型匹配。
+		// 检查所需类型是否与实际bean实例的类型匹配。举例:如果当前bean是String类型,但是需要的类型requiredType=Integer类型,则会进行类型转换.
 		if (requiredType != null && !requiredType.isInstance(bean)) {
 			try {
 				T convertedBean = getTypeConverter().convertIfNecessary(bean, requiredType);

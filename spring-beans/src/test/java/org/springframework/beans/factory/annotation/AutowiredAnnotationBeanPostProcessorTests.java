@@ -65,6 +65,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.annotation.Order;
+import org.springframework.tests.sample.beans.HelloService;
 import org.springframework.tests.sample.beans.ITestBean;
 import org.springframework.tests.sample.beans.IndexedTestBean;
 import org.springframework.tests.sample.beans.NestedTestBean;
@@ -104,6 +105,25 @@ public class AutowiredAnnotationBeanPostProcessorTests {
 		bf.destroySingletons();
 	}
 
+    /**
+     * 测试:对静态字段进行自动注入
+     */
+    @Test
+    public void testAutowiredStaticField() {
+        bf.registerBeanDefinition(HelloService.class.getName(), new RootBeanDefinition(HelloService.class));
+
+        HelloService bean = bf.getBean(HelloService.class);
+        bean.hello();
+    }
+
+    public static class HelloService {
+        @Value("${name:张三}")
+        public static String name;
+
+        public void hello(){
+            System.out.println("hello," + name);
+        }
+    }
 
 	@Test
 	public void testIncompleteBeanDefinition() {

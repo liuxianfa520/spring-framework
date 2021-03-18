@@ -453,6 +453,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
     private void buildAutowiringMetadataWithFields(final List<InjectionMetadata.InjectedElement> currElements, Field field) {
         AnnotationAttributes ann = findAutowiredAnnotation(field);
         if (ann != null) {
+            // 不支持静态方法&字段自动注入
             if (Modifier.isStatic(field.getModifiers())) {
                 if (logger.isWarnEnabled()) {
                     logger.warn("Autowired annotation is not supported on static fields: " + field);
@@ -473,6 +474,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
         AnnotationAttributes ann = findAutowiredAnnotation(bridgedMethod);
         if (ann != null && method.equals(ClassUtils.getMostSpecificMethod(method, clazz))) {
+            // 不支持静态方法&字段自动注入
             if (Modifier.isStatic(method.getModifiers())) {
                 if (logger.isWarnEnabled()) {
                     logger.warn("Autowired annotation is not supported on static methods: " + method);

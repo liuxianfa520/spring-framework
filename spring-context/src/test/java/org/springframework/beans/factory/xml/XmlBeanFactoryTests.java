@@ -132,8 +132,15 @@ public class XmlBeanFactoryTests {
     public void testHelloService() {
         DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
         new XmlBeanDefinitionReader(factory).loadBeanDefinitions(HELLO_SERVICE_CONTEXT);
-        HelloService bean = ((HelloService) factory.getBean("bean"));
+
+        // factory.preInstantiateSingletons(); // 预实例化单例bean
+
+        HelloService bean = ((HelloService) factory.getBean("helloService"));
         bean.hello();
+
+        // scope="singleton" 所以返回true
+        HelloService bean2 = ((HelloService) factory.getBean("helloService"));
+        System.out.println(bean == bean2);
     }
 	@Test  // SPR-2368
 	public void testCollectionsReferredToAsRefLocals() {

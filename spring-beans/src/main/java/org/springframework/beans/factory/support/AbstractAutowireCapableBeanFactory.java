@@ -1371,7 +1371,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				// 实例化bean，调用构造函数反射实例化
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
-			// 将bean实例放到 BeanWrapper 中
+			// 将通过反射new出来的java对象,包装成 BeanWrapper
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
 			initBeanWrapper(bw);
 			return bw;

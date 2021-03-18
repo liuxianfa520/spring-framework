@@ -25,4 +25,12 @@ public class HelloService {
         System.out.println("hello");
     }
 
+    public void init() {
+        System.out.println("init方法执行了");
+    }
+
+    public void destory(){
+        System.out.println("distory 方法执行了.");
+    }
+
 }

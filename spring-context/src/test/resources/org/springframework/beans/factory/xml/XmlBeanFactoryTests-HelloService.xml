@@ -5,7 +5,9 @@
        https://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 
-    <bean id="bean" class="org.springframework.tests.sample.beans.HelloService">
-    </bean>
+    <bean id="helloService" class="org.springframework.tests.sample.beans.HelloService"
+          scope="singleton"
+          init-method="init"
+          destroy-method="destory" />
 
 </beans>

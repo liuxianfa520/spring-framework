@@ -140,6 +140,19 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/**
 	 * Whether to resort to injecting a raw bean instance in case of circular reference,
 	 * even if the injected bean eventually got wrapped.
+     *
+     * 是否在循环引用的情况下采用注入原始bean实例的方式，
+     * 即使注入的bean最终被包裹了。
+     *
+     *
+     * 说人话:
+     * 假设A类和B类形成循环依赖,但是bean A被包装或被aop增强   (画外音:aop增强之后,会生成原对象的子类对象.)
+     * 总之就是最开始new出来的A的实例,和初始化之后的A的实例 不是同一个对象.(内存地址不一样)
+     * 这种情况下,如果 {@link #allowRawInjectionDespiteWrapping} = false,则会抛出 {@link BeanCurrentlyInCreationException}
+     *
+     *
+     * 如果为了解决此类循环依赖,而把此变量设置为true,会导致:
+     * B中依赖的A不是被aop增强之后的对象.
 	 */
 	private boolean allowRawInjectionDespiteWrapping = false;
 
@@ -661,14 +674,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
-		// 和上面一样，这里是单例并且是创建中
-		// 不一样的是，走到这里此时已经解决完循环依赖问题了(bean的属性已经被填充完了)、也可能根本就没有循环依赖问题
+		// 和上面一样，earlySingletonExposure 表示:允许早期单例bean提前暴露.
+		// 不一样的是，经过 populateBean()方法和 initializeBean()方法之后,当前bean的属性应该已经被填充完了.
+        // 这里主要是为了检查这种循环依赖————其中一个bean被包装过或aop增强过.也就是 if (exposedObject == rawBeanInstance) = false 这种情况.
 		if (earlySingletonExposure) {
-
-			// allowEarlyReference = false, 从一级和二级缓存(earlySingletonObjects)中获取
-			// 如果拿到了，说明bean是个被代理过的bean
+			// allowEarlyReference = false, 从一级和二级缓存(earlySingletonObjects)中获取. 如果拿到了说明bean
 			Object earlySingletonReference = getSingleton(beanName, false);
-
 			if (earlySingletonReference != null) {
 				// 如果 exposedObject 没有在初始化方法中被改变
 				if (exposedObject == rawBeanInstance) {
@@ -677,22 +688,19 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					String[] dependentBeans = getDependentBeans(beanName);
 					Set<String> actualDependentBeans = new LinkedHashSet<>(dependentBeans.length);
 					for (String dependentBean : dependentBeans) {
-						// 检测依赖
+						// 如果if结果为true  表示:当前bean正在创建或已经创建完毕. 详见 AbstractBeanFactory#alreadyCreated 的注释.
 						if (!removeSingletonIfCreatedForTypeCheckOnly(dependentBean)) {
-							actualDependentBeans.add(dependentBean);
+							actualDependentBeans.add(dependentBean); // 当前bean依赖的bean,正在创建中
 						}
 					}
-					/*
-					 * 因为bean创建后其所依赖的bean一定是已经创建的，
-					 * actualDependentBeans 不为空 则表示当前bean创建后其依赖的bean却没有全部创建完，
-					 * 也就是说存在循环依赖.
-					 */
-					if (!actualDependentBeans.isEmpty()) {
-						// 抛出Bean目前正在创建中异常
 
-						// 名为 beanName 的Bean已经作为循环引用的一部分注入其原始版本的其他bean [...]，但最终被包装。
-						// 这意味着所述其他bean不使用bean的最终版本。
-						// 这通常是过于急切类型匹配的结果 - 例如，考虑使用'getBeanNamesOfType'并关闭'allowEagerInit'标志。
+                    // 存在循环依赖: actualDependentBeans 不为空,则表示当前bean创建后,其依赖的bean却没有全部创建完.
+					if (!actualDependentBeans.isEmpty()) {
+						// 循环依赖:抛出Bean目前正在创建中异常
+
+						// 作为循环引用的一部分，名称为“circularDependencyA”的Bean已以其原始版本注入到其他Bean [circularDependencyB]中，但最终被包装了。
+						// 这意味着(所说的)其他bean不会使用该bean的最终版本。(例如:当前bean A已经被包装或aop增强,但是其他bean无法使用包装之后的bean A)
+						// 这通常是由于过度渴望类型匹配而导致的 - 例如，考虑在关闭“ allowEagerInit”标志的情况下使用“ getBeanNamesOfType”。
 						throw new BeanCurrentlyInCreationException(beanName,
 								"Bean with name '" + beanName + "' has been injected into other beans [" +
 										StringUtils.collectionToCommaDelimitedString(actualDependentBeans) +

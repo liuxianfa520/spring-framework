@@ -55,6 +55,7 @@ import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.SmartFactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -200,6 +201,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Names of beans that have already been created at least once
+     * 正在创建或已经创建成功的bean的名称
+     *
+     * - 因为是Set,会去重.相同的beanName可能会add多次 (at least once)
+     * - bean开始创建之前,把beanName添加到此集合中.
+     * - 只有bean创建失败时,才会从集合中remove掉.
+     * - bean创建成功,也不会删除.所以包含 已经创建成功的beanName
 	 */
 	private final Set<String> alreadyCreated = Collections.newSetFromMap(new ConcurrentHashMap<>(256));
 
@@ -384,19 +391,23 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// Singleton 的情况
 
 					// 创建一个 ObjectFactory 隐藏实际创建 bean 的细节
-					sharedInstance = getSingleton(beanName, () -> {
-						try {
-							return this.createBean(beanName, mbd, args);
-						} catch (BeansException ex) {
-							// Explicitly remove instance from singleton cache: It might have been put there
-							// eagerly by the creation process, to allow for circular reference resolution.
-							// Also remove any beans that received a temporary reference to the bean.
-							// 从单例缓存中显式删除实例：它可能已经被创建过程急切地放在那里，以允许循环引用解析。
-							// 也删除任何接收到bean的临时引用的bean。
-							destroySingleton(beanName);
-							throw ex;
-						}
-					});
+					sharedInstance = getSingleton(beanName, new ObjectFactory<Object>() {
+                        @Override
+                        public Object getObject() throws BeansException {
+                            try {
+                                Object createdBean = createBean(beanName, mbd, args);
+                                return createdBean;
+                            } catch (BeansException ex) {
+                                // Explicitly remove instance from singleton cache: It might have been put there
+                                // eagerly by the creation process, to allow for circular reference resolution.
+                                // Also remove any beans that received a temporary reference to the bean.
+                                // 从单例缓存中显式删除实例：它可能已经被创建过程急切地放在那里，以允许循环引用解析。
+                                // 也删除任何接收到bean的临时引用的bean。
+                                destroySingleton(beanName);
+                                throw ex;
+                            }
+                        }
+                    });
 					// 获取给定 bean 实例的对象，bean 实例本身或其创建的对象（如果是 FactoryBean）。
 					// 这里正常会调用到 AbstractAutowireCapableBeanFactory 类的 getObjectForBeanInstance()
 					// 里边调用super.getObjectForBeanInstance 最终调用到 AbstractBeanFactory(本类)的 getObjectForBeanInstance()
@@ -1656,7 +1667,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	protected void cleanupAfterBeanCreationFailure(String beanName) {
 		synchronized (this.mergedBeanDefinitions) {
-			this.alreadyCreated.remove(beanName);
+			this.alreadyCreated.remove(beanName); // 只有当前bean创建失败,才会从集合中删除.
 		}
 	}
 
@@ -1680,11 +1691,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @return {@code true} if actually removed, {@code false} otherwise
 	 */
 	protected boolean removeSingletonIfCreatedForTypeCheckOnly(String beanName) {
+        // 如果当前bean不是正在创建中 或者 没有创建成功过.
 		if (!this.alreadyCreated.contains(beanName)) {
-			removeSingleton(beanName);
+			removeSingleton(beanName);// 删除单例bean
 			return true;
 		} else {
-			return false;
+			return false; // 返回false表示:当前bean正在创建或已经创建完毕.   详见 this.alreadyCreated 的注释.
 		}
 	}
 

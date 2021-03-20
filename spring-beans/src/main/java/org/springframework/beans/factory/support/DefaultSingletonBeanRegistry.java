@@ -88,11 +88,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Cache of singleton factories: bean name --> ObjectFactory
+     * 三级缓存 早期单例对象的工厂
 	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/**
 	 * Cache of early singleton objects: bean name --> bean instance
+     * 二级缓存 早期单例对象
 	 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
@@ -136,6 +138,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Map between dependent bean names: bean name --> Set of dependent bean names
+     * A依赖B、C
+     * 则key为A,value为[B、C]
 	 */
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
@@ -196,7 +200,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
-            // 如果 一级缓存(singletonObjects)中不包含此beanName,才会
+            // 如果 一级缓存(singletonObjects)中不包含此beanName,才会放到(三级缓存)单例对象工厂中.
             //     因为在一级缓存(singletonObjects)中的所有bean,已经经过了完整的spring声明周期,已经是一个完整的spring bean了.
 			if (!this.singletonObjects.containsKey(beanName)) {
 				this.singletonFactories.put(beanName, singletonFactory);//
@@ -224,14 +228,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		// 先尝试从一级缓存(singletonObjects)中获取spring bean
-		// 如果不为null，说明拿到的spring Bean已经经历了整个spring bean创建、初始化的过程.则直接return即可.
+		// note:如果不为null，说明拿到的spring Bean已经经历了整个spring bean创建、初始化的过程.则直接return即可.
 		Object singletonObject = this.singletonObjects.get(beanName);
 		// 如果没有拿到，并且这个单例bean还正在创建中(isSingletonCurrentlyInCreation)...
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			// DefaultSingletonBeanRegistry 类的 singletonObjects 属性持有所有已经实例化的singleton spring bean集合（ConcurrentHashMap）
 			synchronized (this.singletonObjects) {
 				// 尝试从二级缓存(earlySingletonObjects)中获取
-				singletonObject = this.earlySingletonObjects.get(beanName);
+				singletonObject = this.earlySingletonObjects.get(beanName); // note:如果返回不为null,说明当前bean正在创建中.
 
 				// allowEarlyReference 这个变量很奇妙，需要注意传进来的是什么值，策略不同
 				// 如果二级缓存(earlySingletonObjects)中没拿到，并且此次getSingleton允许获取提前曝光的Reference

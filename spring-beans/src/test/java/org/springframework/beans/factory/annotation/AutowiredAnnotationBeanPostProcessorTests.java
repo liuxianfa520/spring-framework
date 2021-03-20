@@ -117,8 +117,12 @@ public class AutowiredAnnotationBeanPostProcessorTests {
     }
 
     public static class HelloService {
+        public String name;
+
         @Value("${name:张三}")
-        public static String name;
+        public void setName(String name) {
+            this.name = name;
+        }
 
         public void hello(){
             System.out.println("hello," + name);

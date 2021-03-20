@@ -79,6 +79,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
      * 二、java对象:不在spring容器中管理的java实例对象,或者尚未经过spring创建bean整个过程的java对象,称为java对象.
      *             如果经过spring创建bean整个过程的[java对象],可以称之为[spring bean].
      * (来源于 鲁班学院-子路老师 https://www.bilibili.com/video/BV1uE411d7L5?p=2)
+     *
+     * 三、spring.io文档对于beans的定义:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-introduction
+     * In Spring, the objects that form the backbone of your application and that are managed by the Spring IoC container are called beans.
+     * A bean is an object that is instantiated, assembled, and managed by a Spring IoC container.
 	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
@@ -417,7 +421,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	protected void beforeSingletonCreation(String beanName) {
         // 此方法是在创建bean之前被调用的,如果beanName已经存在于singletonsCurrentlyInCreation,则说明:这个bean目前是inCreation状态,
-        //  此时就需要报错,可能是因为[框架层面无法解决的循环依赖]造成的.比如原型模式/构造器方式的循环依赖.
+        //  此时就需要报错,可能是因为[框架层面无法解决的循环依赖]造成的.比如构造器方式的循环依赖.
 		if (!this.inCreationCheckExclusions.contains(beanName) && !this.singletonsCurrentlyInCreation.add(beanName)) {
 			throw new BeanCurrentlyInCreationException(beanName);
 		}

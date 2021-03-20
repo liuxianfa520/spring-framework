@@ -1,26 +1,22 @@
-package com.atguigu.test.circularReference.useSetter;
+package com.atguigu.test.circularReference.prototype;
 
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * @author LiuXianfa
  * @email xianfaliu@newbanker.cn
- * @date 8/16 19:33
+ * @date 3/20 16:57
  */
-public class CircularDependencyTest {
-
-
+public class CircularDependencyWithPrototypeBeanTest {
     /**
-     * 使用setter注入的单例bean 构成的循环依赖,spring可以解决.
+     * 原型模式 循环依赖
+     * <p>
+     * 如果想要看异常信息,则把 expected = UnsatisfiedDependencyException.class 去掉.
      */
-    @Test
+    @Test// (expected = UnsatisfiedDependencyException.class)
     public void test() {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(CircularReferenceConfig.class);
-
-
         CircularDependencyA a = applicationContext.getBean(CircularDependencyA.class);
         CircularDependencyB b = applicationContext.getBean(CircularDependencyB.class);
 
@@ -31,11 +27,6 @@ public class CircularDependencyTest {
         System.out.println(b);
         System.out.println(a.circB);
 
-        Assert.assertNotNull(a.circB);
-        Assert.assertNotNull(b.circA);
-
-
         applicationContext.close();
     }
-
 }

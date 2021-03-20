@@ -1,7 +1,6 @@
-package com.atguigu.circularReference.useSetter;
+package com.atguigu.test.circularReference.useConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CircularDependencyB {
 
-    @Autowired
     public CircularDependencyA circA;
+
+    @Autowired
+    public CircularDependencyB(CircularDependencyA circA) {
+        this.circA = circA;
+    }
+
 }

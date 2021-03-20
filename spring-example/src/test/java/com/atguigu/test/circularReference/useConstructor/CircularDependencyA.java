@@ -1,4 +1,4 @@
-package com.atguigu.circularReference.useConstructor;
+package com.atguigu.test.circularReference.useConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
  * @date 8/16 19:31
  */
 @Component
-public class CircularDependencyB {
+public class CircularDependencyA {
 
-    private CircularDependencyA circA;
+    public CircularDependencyB circB;
 
     @Autowired
-    public CircularDependencyB(CircularDependencyA circA) {
-        this.circA = circA;
+    public CircularDependencyA(CircularDependencyB circB) {
+        this.circB = circB;
     }
 
 }

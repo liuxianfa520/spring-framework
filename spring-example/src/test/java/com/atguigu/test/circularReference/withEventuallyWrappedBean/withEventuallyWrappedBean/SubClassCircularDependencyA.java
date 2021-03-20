@@ -1,4 +1,4 @@
-package com.atguigu.test.circularReference.withEventuallyWrappedBean;
+package com.atguigu.test.circularReference.withEventuallyWrappedBean.withEventuallyWrappedBean;
 
 /**
  * @author LiuXianfa

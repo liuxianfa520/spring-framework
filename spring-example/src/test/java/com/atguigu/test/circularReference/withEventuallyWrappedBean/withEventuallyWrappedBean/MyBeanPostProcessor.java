@@ -1,4 +1,4 @@
-package com.atguigu.test.circularReference.withEventuallyWrappedBean;
+package com.atguigu.test.circularReference.withEventuallyWrappedBean.withEventuallyWrappedBean;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

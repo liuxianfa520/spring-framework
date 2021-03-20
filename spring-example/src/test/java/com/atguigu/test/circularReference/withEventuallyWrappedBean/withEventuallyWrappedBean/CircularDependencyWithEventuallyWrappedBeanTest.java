@@ -1,4 +1,4 @@
-package com.atguigu.test.circularReference.withEventuallyWrappedBean;
+package com.atguigu.test.circularReference.withEventuallyWrappedBean.withEventuallyWrappedBean;
 
 
 import org.junit.Test;
@@ -75,6 +75,8 @@ public class CircularDependencyWithEventuallyWrappedBeanTest {
         CircularDependencyB b = applicationContext.getBean(CircularDependencyB.class);
         a.hello();
 
+        System.out.println();
+        System.out.println();
         System.out.println("从容器中获取的a对象和b中依赖的a对象是否为同一个对象?" + (a == b.a));
     }
 

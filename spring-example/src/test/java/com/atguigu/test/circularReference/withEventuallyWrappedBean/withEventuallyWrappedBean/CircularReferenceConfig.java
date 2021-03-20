@@ -1,4 +1,4 @@
-package com.atguigu.test.circularReference.withEventuallyWrappedBean;
+package com.atguigu.test.circularReference.withEventuallyWrappedBean.withEventuallyWrappedBean;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
  * @date 8/16 19:32
  */
 @Configuration
-@ComponentScan("com.atguigu.test.circularReference.withEventuallyWrappedBean")
+@ComponentScan("com.atguigu.test.circularReference.withEventuallyWrappedBean.withEventuallyWrappedBean")
 public class CircularReferenceConfig {
 }

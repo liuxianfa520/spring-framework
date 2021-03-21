@@ -142,6 +142,19 @@ public class XmlBeanFactoryTests {
         HelloService bean2 = ((HelloService) factory.getBean("helloService"));
         System.out.println(bean == bean2);
     }
+
+    @Test
+    public void testLoadBeanDefinitions() {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+        int i = beanDefinitionReader.loadBeanDefinitions(HELLO_SERVICE_CONTEXT);
+        System.out.println(i);
+
+        // xml/java注解 ———————BeanDefinitionReader———————> BeanDefinition
+        HelloService helloService = beanFactory.getBean(HelloService.class);
+        helloService.hello();
+    }
+
 	@Test  // SPR-2368
 	public void testCollectionsReferredToAsRefLocals() {
 		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();

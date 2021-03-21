@@ -390,7 +390,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				if (mbd.isSingleton()) {
 					// Singleton 的情况
 
-					// 创建一个 ObjectFactory 隐藏实际创建 bean 的细节
+					// 创建一个 ObjectFactory 隐藏实际创建 bean 的细节(注:这里并没有把ObjectFactory放到三级缓存中)
 					sharedInstance = getSingleton(beanName, new ObjectFactory<Object>() {
                         @Override
                         public Object getObject() throws BeansException {

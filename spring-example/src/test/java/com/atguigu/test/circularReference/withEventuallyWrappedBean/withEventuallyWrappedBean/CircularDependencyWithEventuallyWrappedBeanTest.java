@@ -17,12 +17,12 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
  */
 public class CircularDependencyWithEventuallyWrappedBeanTest {
 
-
     /**
      * <pre>
      * 循环依赖:属于下面情况:
      * A类和B类形成循环依赖,
-     * 但是由于在创建bean A过程中,A被包装了(或者被aop增强了(画外音1)),导致B中注入的A不是被包装(或aop增强之后的bean A)之后的A.(画外音2)
+     * 但是由于在创建bean A过程中,A被包装了.
+     * 这种情况可能会导致B中注入的A不是被包装之后的A.(画外音)
      *
      * 此时会抛出 {@link BeanCurrentlyInCreationException}
      *
@@ -34,8 +34,7 @@ public class CircularDependencyWithEventuallyWrappedBeanTest {
      * 如果想要看异常信息,则把 expected = UnsatisfiedDependencyException.class 去掉.
      *
      *
-     * 画外音1:一个bean被aop增强之后,会生成原对象的子类对象.
-     * 画外音2:也就是 if (exposedObject == rawBeanInstance) = false 这种情况.
+     * 画外音1:也就是 if (exposedObject == rawBeanInstance) = false 这种情况.
      * </pre>
      */
     @Test//(expected = UnsatisfiedDependencyException.class)

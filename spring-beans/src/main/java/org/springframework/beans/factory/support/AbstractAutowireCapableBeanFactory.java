@@ -637,9 +637,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// 在发现了循环依赖时(调用了下面的populateBean自动注入其他bean，其他bean又注入了当前bean),
 			// 会从三级缓存(singletonFactories)中获取工厂方法后调用getObject,生成具有代理包裹(如果有需要)的bean后加入到二级缓存(earlySingletonObjects)中，再把三级缓存(singletonFactories)的工厂删掉
 
-			// 这里把bean实例用ObjectFactory包装了一下,工厂中调用getEarlyBeanReference方法提供返回bean代理实例的能力
-			// 然后删除二级缓存(earlySingletonObjects)、加入三级缓存(singletonFactories)
-			// 其实就是加入三级缓存(singletonFactories)
+			// 把刚刚通过反射new出来的对象rawBeanInstance包装成ObjectFactory并放到三级缓存中(singletonFactories)
             addSingletonFactory(beanName, new ObjectFactory<Object>() {
                 @Override
                 public Object getObject() throws BeansException {// 这里改成内部类更容易理解:这里add的是一个 ObjectFactory

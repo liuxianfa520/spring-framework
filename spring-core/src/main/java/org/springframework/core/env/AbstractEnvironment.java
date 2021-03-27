@@ -326,6 +326,11 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 		}
 	}
 
+    /**
+     * 判断当前环境是否启用.
+     * @param profiles 用于设置dev、test、prod等环境的字符串
+     * @return
+     */
 	@Override
 	public boolean acceptsProfiles(String... profiles) {
 		Assert.notEmpty(profiles, "Must specify at least one profile");

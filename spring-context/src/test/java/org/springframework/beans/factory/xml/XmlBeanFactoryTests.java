@@ -143,6 +143,22 @@ public class XmlBeanFactoryTests {
         System.out.println(bean == bean2);
     }
 
+    /**
+     * 测试直接向beanFactory中注册一个bean定义.
+     */
+    @Test
+    public void testRegisterBeanDefinition() {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        AbstractBeanDefinition beanDefinition = new RootBeanDefinition(HelloService.class);
+        beanFactory.registerBeanDefinition(beanDefinition.getBeanClassName(), beanDefinition);
+
+        HelloService helloService = beanFactory.getBean(HelloService.class);
+        helloService.hello();
+
+        for (String beanDefinitionName : beanFactory.getBeanDefinitionNames()) {
+            System.out.println(beanDefinitionName);
+        }
+    }
     @Test
     public void testLoadBeanDefinitions() {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();

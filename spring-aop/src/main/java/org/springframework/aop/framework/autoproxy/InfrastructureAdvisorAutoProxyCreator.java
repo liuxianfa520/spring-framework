@@ -21,6 +21,10 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * 事务使用的基础自动代理创建器
+ *
+ * infrastructure 基础设置
+ *
  * Auto-proxy creator that considers infrastructure Advisor beans only,
  * ignoring any application-defined Advisors.
  *

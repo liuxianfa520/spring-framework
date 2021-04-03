@@ -174,6 +174,8 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 			if (dm.methodMatcher.matches(this.method, this.targetClass, this.arguments)) {
 				return dm.interceptor.invoke(this);
 			} else {
+                // 方法被调用时,动态匹配方法是否需要使用增强————返回false:
+                // 跳过当前拦截器,调用拦截器链中的下一个.
 				// Dynamic matching failed.
 				// Skip this interceptor and invoke the next in the chain.
 				return proceed();

@@ -53,11 +53,11 @@ public abstract class AopConfigUtils {
 
 	/**
 	 * Stores the auto proxy creator classes in escalation order.
+     * 按升级顺序存储自动代理创建器类。
+     * 元素的下标相当于它的优先级
 	 */
 	private static final List<Class<?>> APC_PRIORITY_LIST = new ArrayList<>(3);
-
 	static {
-		// Set up the escalation list...
 		APC_PRIORITY_LIST.add(InfrastructureAdvisorAutoProxyCreator.class); // 事务用
 		APC_PRIORITY_LIST.add(AspectJAwareAdvisorAutoProxyCreator.class);
 		APC_PRIORITY_LIST.add(AnnotationAwareAspectJAutoProxyCreator.class);

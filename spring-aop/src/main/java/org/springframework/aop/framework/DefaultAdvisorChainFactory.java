@@ -65,7 +65,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
 					if (MethodMatchers.matches(mm, method, actualClass, hasIntroductions)) {
 						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
-						if (mm.isRuntime()) {
+						if (mm.isRuntime()) { //【方法被调用时,才匹配方法是否需要通知advice】如果为true,则包装为:InterceptorAndDynamicMethodMatcher
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.
 							for (MethodInterceptor interceptor : interceptors) {

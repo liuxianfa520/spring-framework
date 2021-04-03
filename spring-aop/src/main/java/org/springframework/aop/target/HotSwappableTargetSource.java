@@ -22,6 +22,12 @@ import org.springframework.aop.TargetSource;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * {@link org.springframework.aop.TargetSource} 接口的一个实现:可以缓存一个本地目标对象,但是允许在程序运行中,替换目标对象.
+ * 官方文档:https://docs.spring.io/spring-framework/docs/5.0.18.RELEASE/spring-framework-reference/core.html#aop-ts-swap
+ * 中文文档:https://www.php.cn/manual/view/21815.html#aop-ts-swap
+ *
+ *
  * {@link org.springframework.aop.TargetSource} implementation that
  * caches a local target object, but allows the target to be swapped
  * while the application is running.

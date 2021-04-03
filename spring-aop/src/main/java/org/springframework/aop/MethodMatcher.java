@@ -53,6 +53,20 @@ import org.springframework.lang.Nullable;
 public interface MethodMatcher {
 
 	/**
+     * 官方文档:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api-pointcuts
+     * 中文文档:https://www.php.cn/manual/view/21778.html
+     *
+     * matches(Method, Class)方法用来测试这个切入点是否匹配目标类的指定方法。
+     * 这将在AOP代理被创建的时候进行运算，这样可以避免在每次方法调用的时候都运算。
+     * 如果matches(Method, Class)对于一个给定的方法返回true，并且isRuntime()也返回true， 那么matches(Method, Class, Object[])将在每个方法调用的时候被调用。
+     * 这使得切入点在通知将被执行前,可以根据传入到方法的参数来判断是否执行此通知。
+     *
+     * 大多数MethodMatcher是静态的，这意味着isRuntime()方法返回false。
+     * 在这种情况下，matches(Method, Class , Object[])永远不会被调用。
+     *
+     * 提示: 应尽可能地使切入点保持静态，这就允许AOP框架在AOP代理被创建时缓存对切入点的计算结果。
+     *
+     *
 	 * Perform static checking whether the given method matches.
 	 * <p>If this returns {@code false} or if the {@link #isRuntime()}
 	 * method returns {@code false}, no runtime check (i.e. no

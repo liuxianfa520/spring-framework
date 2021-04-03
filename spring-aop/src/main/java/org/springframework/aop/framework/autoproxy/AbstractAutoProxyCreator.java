@@ -235,6 +235,15 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		return wrapIfNecessary(bean, beanName, cacheKey);
 	}
 
+    /**
+     * <pre>
+     * note:【重要】aop使用后置处理器,调用此方法的主要作用:
+     *    aop使用'bean实例化之前的后置处理器',可以在bean实例化之前,创建代理对象:
+     *    如果存在[自定义的{@link TargetSource}创建器 {@link AbstractAutoProxyCreator#customTargetSourceCreators}],
+     *    并且通过当前beanName和beanClass可以创建出对应的 {@link TargetSource} :
+     *    就会在 bean实例化之前 去创建目标对象的代理对象.
+     * </pre>
+     */
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
 		// 对于spring容器中所有bean的实例化之前，会调用后置处理器的此方法。
@@ -249,14 +258,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 				return null;
 			}
 			// 如果当前类是 基础(infrastructure)类 或者 可以跳过，则在缓存中记录当前bean无需aop增强。
-			if (isInfrastructureClass(beanClass)
-					|| shouldSkip(beanClass, beanName) // shouldSkip 子类重写了此方法
-			) {
+			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) { // shouldSkip 子类重写了此方法
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
 			}
 		}
 
+		// note:aop使用后置处理器作用:如有自定义的 TargetSource 则跳过spring默认的实例化过程,并创建代理对象.target的自定义实例化由TargetSource来处理.
 		// Create proxy here if we have a custom TargetSource.
 		// Suppresses unnecessary default instantiation of the target bean:
 		// The TargetSource will handle target instances in a custom fashion.
@@ -421,6 +429,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		// We can't create fancy target sources for directly registered singletons.
 		if (this.customTargetSourceCreators != null &&
 				this.beanFactory != null && this.beanFactory.containsBean(beanName)) {
+            // 如果存在 自定义的TargetSource创建器,则创建TargetSource.
+            // TargetSource 来自定义target的实例化过程.(跳过spring默认的实例化过程)
 			for (TargetSourceCreator tsc : this.customTargetSourceCreators) {
 				TargetSource ts = tsc.getTargetSource(beanClass, beanName);
 				if (ts != null) {

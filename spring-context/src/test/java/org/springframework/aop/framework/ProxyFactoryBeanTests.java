@@ -173,10 +173,12 @@ public class ProxyFactoryBeanTests {
 		CountingBeforeAdvice cba = (CountingBeforeAdvice) bf.getBean("countingBeforeAdvice");
 		assertEquals(0, cba.getCalls());
 
+        // ProxyFactoryBean#setInterceptorNames 最后一个值,可以设置为target的beanName
 		ITestBean tb = (ITestBean) bf.getBean("directTarget");
 		assertTrue(tb.getName().equals("Adam"));
 		assertEquals(1, cba.getCalls());
 
+        // beanName 以 & 开头,用于获取 FactoryBean 对象.
 		ProxyFactoryBean pfb = (ProxyFactoryBean) bf.getBean("&directTarget");
 		assertTrue("Has correct object type", TestBean.class.isAssignableFrom(pfb.getObjectType()));
 	}

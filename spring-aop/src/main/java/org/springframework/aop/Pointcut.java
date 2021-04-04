@@ -16,12 +16,26 @@
 
 package org.springframework.aop;
 
+import org.springframework.aop.support.AopUtils;
+
 /**
+ * <pre>
  * Core Spring pointcut abstraction.
  *
  * <p>A pointcut is composed of a {@link ClassFilter} and a {@link MethodMatcher}.
  * Both these basic terms and a Pointcut itself can be combined to build up combinations
  * (e.g. through {@link org.springframework.aop.support.ComposablePointcut}).
+ *
+ * 切入点
+ * {@code
+ *    @Pointcut("execution(public int com.atguigu.aop.MathCalculator.*(..))")
+ *    public void pointCut(){};
+ * }
+ * 一个切入点Pointcut包含一个用于过滤class的 {@link ClassFilter} 和一个用于匹配方法的 {@link MethodMatcher}.
+ * 主要就是根据切入点表达式,判断增强Advice能否apply到对指定方法进行增强.
+ *
+ * </pre>
+ * @see AopUtils#canApply(org.springframework.aop.Pointcut, java.lang.Class) 判断切点能否应用到指定class上.
  *
  * @author Rod Johnson
  * @see ClassFilter

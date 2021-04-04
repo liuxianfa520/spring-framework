@@ -86,6 +86,10 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	/**
 	 * Interfaces to be implemented by the proxy. Held in List to keep the order
 	 * of registration, to create JDK proxy with specified order of interfaces.
+     *
+     * 代理对象要实现的接口。
+     *
+     * 详见测试用例: org.springframework.aop.framework.ProxyFactoryBeanTests
 	 */
 	private List<Class<?>> interfaces = new ArrayList<>();
 

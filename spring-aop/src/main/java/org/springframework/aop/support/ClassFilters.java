@@ -23,8 +23,14 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * <pre>
+ *
  * Static utility methods for composing {@link ClassFilter ClassFilters}.
  *
+ * {@link ClassFilter} 的工具类
+ * 类似 {@link java.util.Collection} 和 {@link java.util.Collections} 之间的关系.
+ *
+ * </pre>
  * @author Rod Johnson
  * @author Rob Harrop
  * @author Juergen Hoeller

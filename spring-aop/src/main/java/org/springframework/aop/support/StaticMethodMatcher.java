@@ -25,8 +25,13 @@ import org.springframework.lang.Nullable;
  * Convenient abstract superclass for static method matchers, which don't care
  * about arguments at runtime.
  *
- * 判断静态方法是否需要增强.
- * 所以对于存在targetClass参数的方法,肯定是不支持的.因为静态方法,都是使用类名调用的
+ * 静态方法匹配器
+ * 注意:这里的'静态方法'不是指有static修饰的方法.
+ *      而是说何时判断advice能否增强指定方法:
+ *      - 是在创建bean过程中进行matches匹配判断?         isRuntime()返回false
+ *      - 还是在目标方法被调用时,进行matches匹配判断?     isRuntime()返回true
+ *
+ *      这里的 {@link StaticMethodMatcher#isRuntime} 方法都是返回false.说明都是在bean创建时判断.
  *
  * @author Rod Johnson
  */
@@ -40,6 +45,7 @@ public abstract class StaticMethodMatcher implements MethodMatcher {
 	@Override
 	public final boolean matches(Method method, @Nullable Class<?> targetClass, Object... args) {
 		// should never be invoked because isRuntime() returns false
+        // 此方法永远不会被调用,因为 isRuntime() 返回 false
 		throw new UnsupportedOperationException("Illegal MethodMatcher usage");
 	}
 

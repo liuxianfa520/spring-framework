@@ -217,8 +217,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 		validate(aspectInstanceFactory.getAspectMetadata().getAspectClass());
 
 		// 获取当前通知的切点表达式
-		AspectJExpressionPointcut expressionPointcut =
-				getPointcut(candidateAdviceMethod, aspectInstanceFactory.getAspectMetadata().getAspectClass());
+		AspectJExpressionPointcut expressionPointcut = getPointcut(candidateAdviceMethod, aspectInstanceFactory.getAspectMetadata().getAspectClass());
 
 		if (expressionPointcut == null) {
 			return null;
@@ -241,12 +240,12 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
         // @Before("pointCut()") @After("pointCut()") 等这些注解里的 "pointCut()" 表达式。
         String pointcutExpression = aspectJAnnotation.getPointcutExpression();
 
-        AspectJExpressionPointcut ajexp = new AspectJExpressionPointcut(candidateAspectClass, new String[0], new Class<?>[0]);
-        ajexp.setExpression(pointcutExpression);
+        AspectJExpressionPointcut expressionPointcut = new AspectJExpressionPointcut(candidateAspectClass, new String[0], new Class<?>[0]);
+        expressionPointcut.setExpression(pointcutExpression);
 		if (this.beanFactory != null) {
-			ajexp.setBeanFactory(this.beanFactory);
+			expressionPointcut.setBeanFactory(this.beanFactory);
 		}
-		return ajexp;
+		return expressionPointcut;
 	}
 
 

@@ -64,7 +64,7 @@ public interface MethodMatcher {
      * 大多数MethodMatcher是静态的，这意味着isRuntime()方法返回false。
      * 在这种情况下，matches(Method, Class , Object[])永远不会被调用。
      *
-     * 提示: 应尽可能地使切入点保持静态，这就允许AOP框架在AOP代理被创建时缓存对切入点的计算结果。
+     * 提示: 应尽可能地使切入点保持静态(即:isRuntime()返回false)，这就允许AOP框架在AOP代理被创建时缓存对切入点的计算结果。
      *
      *
 	 * Perform static checking whether the given method matches.

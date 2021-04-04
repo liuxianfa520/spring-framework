@@ -44,7 +44,18 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 	private final AspectJAdvisorFactory advisorFactory;
 
     /**
+     * <pre>
      * spring容器中所有的切面类的beanName
+     *
+     * 带有 @Aspect 注解的beanName:
+     * {@code
+     *     @Aspect
+     *     public class LogAspects {
+     *        @Pointcut("execution(public int com.atguigu.aop.MathCalculator.*(..))")
+     *        public void pointCut(){};
+     *     }
+     * }
+     * </pre>
      */
 	@Nullable
 	private volatile List<String> aspectBeanNames;
@@ -89,7 +100,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
     /**
      * <pre>
      *
-     * 构建容器中所有切面类（存在@Aspect注解的类）
+     * 构建容器中所有切面类的advice（存在@Aspect注解的类）
      * 对于第一次调用此方法：
      * 1、从 beanFactory 这个spring容器中获取所有的bean，判断是否为切面类（存在@Aspect注解的类）
      * 2、如果是：则作为切面类（存在@Aspect注解的类）来解析当前这个bean。

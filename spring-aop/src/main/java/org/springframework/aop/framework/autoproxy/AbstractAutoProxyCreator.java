@@ -402,6 +402,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
+     * 子类实现此方法:判断当前bean是否跳过自动代理
+     *
 	 * Subclasses should override this method to return {@code true} if the given bean should not be considered for auto-proxying by this post-processor.
 	 * <p>Sometimes we need to be able to avoid this happening if it will lead to
 	 * a circular reference. This implementation returns {@code false}.

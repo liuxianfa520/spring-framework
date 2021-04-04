@@ -28,15 +28,17 @@
 		<constructor-arg><ref bean="target"/></constructor-arg>
 	</bean>
 
+    <!-- interceptorNames 最后一个值,可以设置为目标对象的beanName -->
 	<bean id="directTarget"
 		class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="interceptorNames" value="countingBeforeAdvice,nopInterceptor,target"/>
 		<property name="proxyTargetClass" value="true"/>
 	</bean>
 
-	<bean id="viaTargetSource"
-		class="org.springframework.aop.framework.ProxyFactoryBean">
+	<bean id="viaTargetSource" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <!-- interceptorNames 最后一个值设置为 SingletonTargetSource 的beanName     -->
 		<property name="interceptorNames"><value>nopInterceptor,targetSource</value></property>
+        <!-- 使用cglib动态代理 -->
 		<property name="proxyTargetClass" value="true"/>
 	</bean>
 
@@ -46,12 +48,18 @@
 
 	<!--
 		No target or target source, just the interceptor
+		没有设置target 或 targetSource.只设置了 interceptor....方法调用的时候,会报错
 	-->
 	<bean id="noTarget"
 		class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces"><value>org.springframework.tests.sample.beans.ITestBean</value></property>
-		<property name="interceptorNames"><value>nopInterceptor,unsupportedInterceptor</value></property>
-	</bean>
+        <property name="interceptorNames"><value>nopInterceptor,unsupportedInterceptor</value></property>
+
+        <!-- 如果只设置nopInterceptor,方法调用时,会报NPE:
+             org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection  这里使用反射调用方法时,会NPE
+        -->
+<!--     <property name="interceptorNames"><value>nopInterceptor</value></property>-->
+    </bean>
 
 </beans>
 

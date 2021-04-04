@@ -162,6 +162,8 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	 * @see org.springframework.aop.target.SingletonTargetSource
 	 */
 	public void setInterceptorNames(String... interceptorNames) {
+	    // 数组中的最后一个,可以设置为目标对象的beanName .会被保存到targetName
+        // 解析最后一个entry的逻辑在:this.checkInterceptorNames() 方法
 		this.interceptorNames = interceptorNames;
 	}
 
@@ -249,15 +251,17 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	@Override
 	@Nullable
 	public Object getObject() throws BeansException {
+        // 初始化 super.advisors
 		initializeAdvisorChain();
+
+		// 如果是单例的,就返回单例代理对象.
 		if (isSingleton()) {
 			return getSingletonInstance();
-		}
-		else {
+		} else {
 			if (this.targetName == null) {
-				logger.warn("Using non-singleton proxies with singleton targets is often undesirable. " +
-						"Enable prototype proxies by setting the 'targetName' property.");
+				logger.warn("Using non-singleton proxies with singleton targets is often undesirable. " + "Enable prototype proxies by setting the 'targetName' property.");
 			}
+			// 返回原型代理对象
 			return newPrototypeInstance();
 		}
 	}
@@ -317,17 +321,20 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	private synchronized Object getSingletonInstance() {
 		if (this.singletonInstance == null) {
 			this.targetSource = freshTargetSource();
+            // 自动检测接口
 			if (this.autodetectInterfaces && getProxiedInterfaces().length == 0 && !isProxyTargetClass()) {
 				// Rely on AOP infrastructure to tell us what interfaces to proxy.
 				Class<?> targetClass = getTargetClass();
 				if (targetClass == null) {
 					throw new FactoryBeanNotInitializedException("Cannot determine target class for proxy");
 				}
+				// 获取target实现的接口,并设置.
 				setInterfaces(ClassUtils.getAllInterfacesForClass(targetClass, this.proxyClassLoader));
 			}
 			// Initialize the shared singleton instance.
 			super.setFrozen(this.freezeProxy);
-			this.singletonInstance = getProxy(createAopProxy());
+            // 单例:创建代理对象
+            this.singletonInstance = getProxy(createAopProxy());
 		}
 		return this.singletonInstance;
 	}
@@ -381,19 +388,25 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	/**
 	 * Check the interceptorNames list whether it contains a target name as final element.
 	 * If found, remove the final name from the list and set it as targetName.
+     *
+     * 检查interceptorNames
+     *
+     * 从下面的逻辑中可以看出:
+     * interceptorNames 最后一个元素的值如果不是advisor或advice,就认为是targetName
 	 */
 	private void checkInterceptorNames() {
 		if (!ObjectUtils.isEmpty(this.interceptorNames)) {
+            // 最后一个元素
 			String finalName = this.interceptorNames[this.interceptorNames.length - 1];
 			if (this.targetName == null && this.targetSource == EMPTY_TARGET_SOURCE) {
 				// The last name in the chain may be an Advisor/Advice or a target/TargetSource.
 				// Unfortunately we don't know; we must look at type of the bean.
+                // 不是*结尾并且不是advisor/advice ————— 就认为是targetName
 				if (!finalName.endsWith(GLOBAL_SUFFIX) && !isNamedBeanAnAdvisorOrAdvice(finalName)) {
 					// The target isn't an interceptor.
 					this.targetName = finalName;
 					if (logger.isDebugEnabled()) {
-						logger.debug("Bean with name '" + finalName + "' concluding interceptor chain " +
-								"is not an advisor class: treating it as a target or TargetSource");
+						logger.debug("Bean with name '" + finalName + "' concluding interceptor chain " + "is not an advisor class: treating it as a target or TargetSource");
 					}
 					String[] newNames = new String[this.interceptorNames.length - 1];
 					System.arraycopy(this.interceptorNames, 0, newNames, 0, newNames.length);
@@ -431,14 +444,14 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	 * are unaffected by such changes.
 	 */
 	private synchronized void initializeAdvisorChain() throws AopConfigException, BeansException {
+        // 已初始化过,则直接返回.(此方法是synchronized,所以多线程下没问题.)
 		if (this.advisorChainInitialized) {
 			return;
 		}
 
 		if (!ObjectUtils.isEmpty(this.interceptorNames)) {
 			if (this.beanFactory == null) {
-				throw new IllegalStateException("No BeanFactory available anymore (probably due to serialization) " +
-						"- cannot resolve interceptor names " + Arrays.asList(this.interceptorNames));
+				throw new IllegalStateException("No BeanFactory available anymore (probably due to serialization) " + "- cannot resolve interceptor names " + Arrays.asList(this.interceptorNames));
 			}
 
 			// Globals can't be last unless we specified a targetSource using the property...
@@ -455,8 +468,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 				if (name.endsWith(GLOBAL_SUFFIX)) {
 					if (!(this.beanFactory instanceof ListableBeanFactory)) {
-						throw new AopConfigException(
-								"Can only use global advisors or interceptors with a ListableBeanFactory");
+						throw new AopConfigException("Can only use global advisors or interceptors with a ListableBeanFactory");
 					}
 					addGlobalAdvisor((ListableBeanFactory) this.beanFactory,
 							name.substring(0, name.length() - GLOBAL_SUFFIX.length()));

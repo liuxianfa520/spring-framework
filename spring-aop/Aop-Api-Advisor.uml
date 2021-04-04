@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.springframework.aop.support.DefaultPointcutAdvisor</OriginalElement>
+  <nodes>
+    <node x="798.5" y="188.0">org.springframework.aop.PointcutAdvisor</node>
+    <node x="1001.5" y="188.0">org.springframework.aop.IntroductionAdvisor</node>
+    <node x="731.0" y="412.0">org.springframework.aop.support.AbstractGenericPointcutAdvisor</node>
+    <node x="499.75" y="552.0">org.springframework.aop.support.DefaultPointcutAdvisor</node>
+    <node x="862.25" y="99.0">org.springframework.aop.Advisor</node>
+    <node x="762.5" y="272.0">org.springframework.aop.support.AbstractPointcutAdvisor</node>
+  </nodes>
+  <notes>
+    <note x="1095.25" y="94.0">
+      <node>org.springframework.aop.IntroductionAdvisor</node>
+      <value>引入增强器\n是一种特殊的通知器。</value>
+      <edge>
+        <point x="54.75" y="-17.0" />
+        <point x="0.0" y="22.0" />
+      </edge>
+    </note>
+    <note x="0.0" y="356.0">
+      <node>org.springframework.aop.support.DefaultPointcutAdvisor</node>
+      <value>在Spring里，一个Advisor是一个仅仅包含一个通知对象和与之关联的切入点表达式的切面。\n\n除了引入这种特殊形式，任何通知器（advisor）都可以和任何通知一起工作。 \norg.springframework.aop.support.DefaultPointcutAdvisor是最常用的通知器类。\n例如，它可以和 MethodInterceptor，BeforeAdvice或者 ThrowsAdvice一起使用。\n\n在Spring里有可能在同一个AOP代理里混合通知器和通知类型。 \n例如，你可以在一个代理配置里使用一个拦截环绕通知，一个异常通知和一个前置通知：Spring将负责自动创建所需的拦截器链。</value>
+      <edge>
+        <point x="-61.5" y="-17.0" />
+        <point x="561.25" y="527.0" />
+        <point x="355.5" y="527.0" />
+        <point x="0.0" y="73.0" />
+      </edge>
+    </note>
+    <note x="811.25" y="0.0">
+      <node>org.springframework.aop.Advisor</node>
+      <value>唯一的方法：获取唯一的通知对象。\nAdvice getAdvice();</value>
+      <edge>
+        <point x="0.0" y="-17.0" />
+        <point x="0.0" y="22.0" />
+      </edge>
+    </note>
+  </notes>
+  <edges>
+    <edge source="org.springframework.aop.support.AbstractPointcutAdvisor" target="org.springframework.aop.PointcutAdvisor">
+      <point x="0.0" y="-17.0" />
+      <point x="0.0" y="17.0" />
+    </edge>
+    <edge source="org.springframework.aop.IntroductionAdvisor" target="org.springframework.aop.Advisor">
+      <point x="-54.75" y="-17.0" />
+      <point x="1056.25" y="163.0" />
+      <point x="945.5" y="163.0" />
+      <point x="27.75" y="17.0" />
+    </edge>
+    <edge source="org.springframework.aop.support.AbstractGenericPointcutAdvisor" target="org.springframework.aop.support.AbstractPointcutAdvisor">
+      <point x="0.0" y="-17.0" />
+      <point x="0.0" y="17.0" />
+    </edge>
+    <edge source="org.springframework.aop.support.DefaultPointcutAdvisor" target="org.springframework.aop.support.AbstractGenericPointcutAdvisor">
+      <point x="61.5" y="-17.0" />
+      <point x="684.25" y="527.0" />
+      <point x="890.0" y="527.0" />
+      <point x="0.0" y="17.0" />
+    </edge>
+    <edge source="org.springframework.aop.PointcutAdvisor" target="org.springframework.aop.Advisor">
+      <point x="0.0" y="-17.0" />
+      <point x="-27.75" y="17.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.5" x="464.92857142857133" y="193.00000000000003" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>Production</SCOPE>
+  <VISIBILITY>public</VISIBILITY>
+</Diagram>
+

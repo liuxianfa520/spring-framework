@@ -58,6 +58,7 @@ public class ProxyConfig implements Serializable {
 	 * @see org.springframework.aop.TargetSource#getTargetClass()
 	 */
 	public void setProxyTargetClass(boolean proxyTargetClass) {
+        // 设置为true:表示强制使用cglib创建代理对象
 		this.proxyTargetClass = proxyTargetClass;
 	}
 

@@ -39,6 +39,15 @@ import org.springframework.transaction.PlatformTransactionManager;
  *
  * <p>TransactionInterceptors are thread-safe.
  *
+ *
+ *
+ * 事务拦截器
+ * 实现了 {@link MethodInterceptor}接口,本质上是个AOP的Advice通知:
+ * 实现 {@code Object invoke(MethodInvocation invocation);} 方法可以对目标方法执行前后,做事务控制.
+ *
+ *
+ *
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see TransactionProxyFactoryBean

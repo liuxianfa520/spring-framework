@@ -20,6 +20,7 @@ import org.aopalliance.aop.Advice;
 
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.Pointcut;
+import org.springframework.aop.PointcutAdvisor;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -40,9 +41,22 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public class TransactionAttributeSourceAdvisor extends AbstractPointcutAdvisor {
 
+    /**
+     * 从Aop API层面,对这个属性的理解:
+     * 每个Advisor通知器都会持有一个对应的Advice通知对象
+     * TransactionInterceptor 实现了 {@link Advice}
+     *
+     * @see #getAdvice()
+     */
 	@Nullable
 	private TransactionInterceptor transactionInterceptor;
 
+    /**
+     * 从Aop API层面,对此属性的理解:
+     * 当前类是 {@link PointcutAdvisor} 的子类.
+     *
+     * @see #getPointcut()
+     */
 	private final TransactionAttributeSourcePointcut pointcut = new TransactionAttributeSourcePointcut() {
 		@Override
 		@Nullable

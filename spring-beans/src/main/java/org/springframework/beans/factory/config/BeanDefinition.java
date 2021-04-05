@@ -262,6 +262,11 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**
 	 * Return whether this bean is "abstract", that is, not meant to be instantiated.
+     *
+     * abstract=true的一个使用场景:
+     * 如果你有一个（父）bean定义你希望仅仅作为模版使用，而这个定义明确规定了一个类，你必须把abstract参数设置为true，否则应用程序上下文将试图预先初始化它。
+     * 官方文档: https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-concise-proxy
+     * 中文文档: https://www.php.cn/manual/view/21806.html
 	 */
 	boolean isAbstract();
 

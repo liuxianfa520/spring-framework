@@ -13,7 +13,8 @@ import java.lang.reflect.Method;
  * <pre>
  * 测试&学习使用cglib实现动态代理
  * 1、使用cglib动态代理原理:
- *    使用ASM底层字节码操作类库,动态生成的代理对象为目标对象的子类.
+ *    CGLIB使用ASM底层字节码操作类库,在运行时生成一个目标类的子类来进行代理工作。
+ *    Spring配置这个生成的子类对原始目标对象的方法调用进行托管：子类实现了装饰器（Decorator）模式，把通知Advice织入。
  *    在子类中的所有方法中,都调用 {@link MethodInterceptor} 方法.
  *    所以 无法对final类和final方法进行增强. 备注:{@link Enhancer#generateClass}中判断了superClass如果是final修饰,就抛出异常.
  * 2、优点:
@@ -21,8 +22,12 @@ import java.lang.reflect.Method;
  * 3、缺点:
  *      需要引入单独的cglib包和asm包等.作者只有一个人.后续版本升级维护等方面,可能没有jdk原生动态代理有优势.
  *      无法对final类和final方法进行增强.(因为是生成的子类,final类和final方法都不能被重写.)
+ *      官方文档:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api-proxying-class
  * 4、性能:
  *      据说和jdk8的动态代理对比,性能方面已经差不多了.
+ *      官方文档对性能方面的描述:There is little performance difference between CGLIB proxying and dynamic proxies.
+ *                            Performance should not be a decisive consideration in this case.
+ *                    文档地址:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api-proxying-class
  * 5、视频地址:https://www.bilibili.com/video/BV1SJ411v7fq
  * 6、执行此代码之后,会在[项目根目录 + /com/atguigu/test/cglibDynamicProxy/] 目录下生成代理类class文件.
  * 7、从动态生成的代理类class文件可见,代理方法实现为:

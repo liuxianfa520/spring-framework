@@ -34,14 +34,35 @@ public class ProxyConfig implements Serializable {
 	private static final long serialVersionUID = -8409359707199703185L;
 
 
+    /**
+     * 这个属性为true时，目标类本身被代理而不是目标类的接口。
+     * 如果这个属性值被设为true，CGLIB代理将被创建
+     * 文档:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api-proxying-class
+     * （可以参看下面名为第 7.5.3 节 “基于JDK和CGLIB的代理”的章节https://www.php.cn/manual/view/21799.html#aop-pfb-proxy-types）
+     */
 	private boolean proxyTargetClass = false;
 
+    /**
+     * 用来控制通过CGLIB创建的代理是否使用激进的优化策略。
+     *
+     * 除非完全了解AOP代理如何处理优化，否则不推荐用户使用这个设置。
+     * 目前这个属性仅用于CGLIB代理； 对于JDK动态代理（缺省代理）无效。
+     */
 	private boolean optimize = false;
 
 	boolean opaque = false;
 
+    /**
+     * 决定当前代理对象是否被暴露在一个ThreadLocal 中以便被目标对象访问。
+     * 如果目标对象需要获取代理而且exposeProxy属性被设为 true，目标对象可以使用AopContext.currentProxy()方法。
+     */
 	boolean exposeProxy = false;
 
+    /**
+     * 如果一个代理配置是frozen的，就不允许对该配置进行修改。
+     * 这在简单优化和不希望调用者在代理创建后操作代理（通过Advised接口） 时很有用。
+     * 缺省值为false，即可以进行类似添加附加通知的操作。
+     */
 	private boolean frozen = false;
 
 

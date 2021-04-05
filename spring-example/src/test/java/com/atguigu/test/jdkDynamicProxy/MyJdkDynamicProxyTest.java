@@ -102,6 +102,9 @@ import java.lang.reflect.Proxy;
  * 6、jdk动态代理的缺点:
  *    必须要求需要代理的类实现自接口.对代码有侵入性.
  *    性能方面,经过jdk8优化后,已经和cglib差不多了.
+ *    官方文档对性能方面的描述:There is little performance difference between CGLIB proxying and dynamic proxies.
+ *                            Performance should not be a decisive consideration in this case.
+ *                   文档地址:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api-proxying-class
  * 7、spring官方用的jdk动态代理实现的aop源码: org.springframework.aop.framework.JdkDynamicAopProxy
  * </pre>
  *

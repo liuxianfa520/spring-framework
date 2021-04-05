@@ -82,6 +82,12 @@ import org.springframework.util.ObjectUtils;
  * do not have the same object identity. However, they do have the same interceptors
  * and target, and changing any reference will change all objects.
  *
+ *
+ *
+ * 官方文档:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-pfb
+ * 中文文档:https://www.php.cn/manual/view/21799.html
+ *
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see #setInterceptorNames
@@ -96,18 +102,30 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 	/**
 	 * This suffix in a value in an interceptor list indicates to expand globals.
+     *
+     * interceptorNames 的通配符后缀
+     * 使用“全局”通知器 : https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-global-advisors
 	 */
 	public static final String GLOBAL_SUFFIX = "*";
 
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+    /**
+     * advice增强器链的beanName
+     */
 	@Nullable
 	private String[] interceptorNames;
 
+    /**
+     * 被代理bean的beanName
+     */
 	@Nullable
 	private String targetName;
 
+    /**
+     * 是否开启自动检测target类实现了哪些接口
+     */
 	private boolean autodetectInterfaces = true;
 
 	private boolean singleton = true;
@@ -124,10 +142,16 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	@Nullable
 	private transient BeanFactory beanFactory;
 
-	/** Whether the advisor chain has already been initialized */
+    /**
+     * Whether the advisor chain has already been initialized
+     * advisor增强器链是否已初始化完毕
+     */
 	private boolean advisorChainInitialized = false;
 
-	/** If this is a singleton, the cached singleton proxy instance */
+    /**
+     * If this is a singleton, the cached singleton proxy instance
+     * 如果目标bean是单例的,则这里缓存代理对象实例
+     */
 	@Nullable
 	private Object singletonInstance;
 

@@ -22,8 +22,12 @@ import org.springframework.aop.Advisor;
 
 /**
  * Interface for registries of Advisor adapters.
+ * Advisor适配器 的注册中心
+ *
+ * 目前只有一个实现类:{@link DefaultAdvisorAdapterRegistry} ,总共提供了3个 Advisor适配器
  *
  * <p><i>This is an SPI interface, not to be implemented by any Spring user.</i>
+ * 这是一个 SPI 接口,任何用户不要去实现此接口.
  *
  * @author Rod Johnson
  * @author Rob Harrop

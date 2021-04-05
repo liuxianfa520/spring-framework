@@ -40,6 +40,8 @@ public interface Advised extends TargetClassAware {
 	/**
 	 * Return whether the Advised configuration is frozen,
 	 * in which case no advice changes can be made.
+     *
+     * @see ProxyConfig#frozen
 	 */
 	boolean isFrozen();
 

@@ -34,6 +34,8 @@ import org.springframework.util.Assert;
  * Helper for retrieving standard Spring Advisors from a BeanFactory,
  * for use with auto-proxying.
  *
+ * 用于从BeanFactory检索标准Spring Advisor的工具类，用于自动代理。
+ *
  * @author Juergen Hoeller
  * @since 2.0.2
  * @see AbstractAdvisorAutoProxyCreator
@@ -61,6 +63,9 @@ public class BeanFactoryAdvisorRetrievalHelper {
 	/**
 	 * Find all eligible Advisor beans in the current bean factory,
 	 * ignoring FactoryBeans and excluding beans that are currently in creation.
+     *
+     * 找到容器中所有合格的Advisor,会忽略 FactoryBeans 和正在创建中的 Advisor
+     *
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
 	 * @see #isEligibleBean
 	 */
@@ -84,7 +89,7 @@ public class BeanFactoryAdvisorRetrievalHelper {
 		List<Advisor> advisors = new ArrayList<>();
 		for (String name : advisorNames) {
 
-			// 根据 BeanDefinition 的 Role 判断是否是合适的 advisor
+			// 判断beanName是否合法.   (子类的实现:BeanFactoryAdvisorRetrievalHelperAdapter#isEligibleBean)
 			if (isEligibleBean(name)) {
 				if (this.beanFactory.isCurrentlyInCreation(name)) {
 					if (logger.isDebugEnabled()) {

@@ -27,6 +27,12 @@ import org.springframework.aop.Advisor;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 
 /**
+ *
+ *
+ * Advisor的适配器工厂
+ *
+ * {@link AdvisorAdapter Advisor适配器}
+ *
  * Default implementation of the {@link AdvisorAdapterRegistry} interface.
  * Supports {@link org.aopalliance.intercept.MethodInterceptor},
  * {@link org.springframework.aop.MethodBeforeAdvice},
@@ -40,6 +46,10 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 @SuppressWarnings("serial")
 public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Serializable {
 
+    /**
+     * 此适配器工厂中,
+     * 总共提供了三个Advisor的适配器
+     */
 	private final List<AdvisorAdapter> adapters = new ArrayList<>(3);
 
 
@@ -54,6 +64,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 
 
     /**
+     * 【此工厂中 最重要的方法】:
      * 把advice wrap包装成Advisor
      */
 	@Override

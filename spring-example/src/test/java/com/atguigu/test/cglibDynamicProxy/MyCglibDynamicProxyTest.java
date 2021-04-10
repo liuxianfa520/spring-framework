@@ -20,9 +20,13 @@ import java.lang.reflect.Method;
  * 2、优点:
  *      无需要求被代理类实现接口.对代码侵入性较低.
  * 3、缺点:
- *      需要引入单独的cglib包和asm包等.作者只有一个人.后续版本升级维护等方面,可能没有jdk原生动态代理有优势.
- *      无法对final类和final方法进行增强.(因为是生成的子类,final类和final方法都不能被重写.)
- *      官方文档:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api-proxying-class
+ *      1)、需要引入单独的cglib包和asm包等.作者只有一个人.后续版本升级维护等方面,可能没有jdk原生动态代理有优势.
+ *      2)、无法对final类和final方法进行增强.(因为是生成的子类,final类和final方法都不能被重写.)
+ *      上面两条的 官方文档:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api-proxying-class
+ *      3)、在spring 4.0以前,被代理对象的构造方法会被调用两次.在spring4.x被代理对象的构造方法就不会被调用两次了.
+ *          官方文档原文:As of Spring 4.0, the constructor of your proxied object is NOT called twice anymore, since the CGLIB proxy instance is created through Objenesis.
+ *                      Only if your JVM does not allow for constructor bypassing, you might see double invocations and corresponding debug log entries from Spring’s AOP support.
+ *           官方文档:https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-proxying
  * 4、性能:
  *      据说和jdk8的动态代理对比,性能方面已经差不多了.
  *      官方文档对性能方面的描述:There is little performance difference between CGLIB proxying and dynamic proxies.

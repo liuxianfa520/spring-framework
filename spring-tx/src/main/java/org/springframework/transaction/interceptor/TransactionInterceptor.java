@@ -77,8 +77,10 @@ public class TransactionInterceptor extends TransactionAspectSupport implements 
 	 * @see #setTransactionAttributes(java.util.Properties)
 	 */
 	public TransactionInterceptor(PlatformTransactionManager ptm, Properties attributes) {
-		setTransactionManager(ptm);
-		setTransactionAttributes(attributes);
+        // 设置事务管理器
+        setTransactionManager(ptm);
+        // 设置事务属性
+        setTransactionAttributes(attributes);
 	}
 
 	/**
@@ -90,7 +92,9 @@ public class TransactionInterceptor extends TransactionAspectSupport implements 
 	 * @see #setTransactionAttributeSource(TransactionAttributeSource)
 	 */
 	public TransactionInterceptor(PlatformTransactionManager ptm, TransactionAttributeSource tas) {
-		setTransactionManager(ptm);
+        // 设置事务管理器
+        setTransactionManager(ptm);
+        // 设置事务属性来源管理器
 		setTransactionAttributeSource(tas);
 	}
 

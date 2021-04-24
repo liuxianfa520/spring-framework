@@ -282,13 +282,15 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		// 如果transaction属性为null，则该方法为非事务处理。
 		TransactionAttributeSource tas = getTransactionAttributeSource();
 		final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
+        // 确定事务管理器
 		final PlatformTransactionManager tm = determineTransactionManager(txAttr);
+        // 格式: com.atguigu.tx.UserService.insertUser
 		final String joinpointIdentification = methodIdentification(method, targetClass, txAttr);
 
 		// 处理声明式事务
 		if (txAttr == null || !(tm instanceof CallbackPreferringPlatformTransactionManager)) {
 			// Standard transaction demarcation with getTransaction and commit/rollback calls.
-			// 有没有必要创建事务  开启事务  将事务信息放到TransactionInfo中
+			// 如果必要,则创建事务
 			TransactionInfo txInfo = createTransactionIfNecessary(tm, txAttr, joinpointIdentification);
 
 			Object retVal;
@@ -379,6 +381,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 
 	/**
 	 * Determine the specific transaction manager to use for the given transaction.
+     * 确定事务管理器
 	 */
 	@Nullable
 	protected PlatformTransactionManager determineTransactionManager(@Nullable TransactionAttribute txAttr) {
@@ -389,19 +392,23 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 
 		String qualifier = txAttr.getQualifier();
 		if (StringUtils.hasText(qualifier)) {
+		    // 通过beanName确定事务管理器
 			return determineQualifiedTransactionManager(this.beanFactory, qualifier);
 		}
 		else if (StringUtils.hasText(this.transactionManagerBeanName)) {
+            // 通过beanName确定事务管理器
 			return determineQualifiedTransactionManager(this.beanFactory, this.transactionManagerBeanName);
 		}
 		else {
 			PlatformTransactionManager defaultTransactionManager = getTransactionManager();
 			if (defaultTransactionManager == null) {
+                // 默认事务管理器
 				defaultTransactionManager = this.transactionManagerCache.get(DEFAULT_TRANSACTION_MANAGER_KEY);
 				if (defaultTransactionManager == null) {
+                    // 根据class类型,找到事务管理器
 					defaultTransactionManager = this.beanFactory.getBean(PlatformTransactionManager.class);
-					this.transactionManagerCache.putIfAbsent(
-							DEFAULT_TRANSACTION_MANAGER_KEY, defaultTransactionManager);
+                    // 保存到缓存中
+					this.transactionManagerCache.putIfAbsent(DEFAULT_TRANSACTION_MANAGER_KEY, defaultTransactionManager);
 				}
 			}
 			return defaultTransactionManager;

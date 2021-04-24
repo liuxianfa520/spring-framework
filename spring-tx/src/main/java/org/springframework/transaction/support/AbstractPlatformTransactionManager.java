@@ -349,33 +349,41 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 			definition = new DefaultTransactionDefinition();
 		}
 
+		// 如果当前线程已经存在事务
 		if (isExistingTransaction(transaction)) {
 			// Existing transaction found -> check propagation behavior to find out how to behave.
+            // 找到存在的事务 ——> 检查事务传播行为
 			return handleExistingTransaction(definition, transaction, debugEnabled);
 		}
 
 		// Check definition settings for new transaction.
+        // 检查是否超时
 		if (definition.getTimeout() < TransactionDefinition.TIMEOUT_DEFAULT) {
 			throw new InvalidTimeoutException("Invalid transaction timeout", definition.getTimeout());
 		}
 
 		// No existing transaction found -> check propagation behavior to find out how to proceed.
+        // 当前线程没有事务 ——>
 		if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_MANDATORY) {
-			throw new IllegalTransactionStateException(
-					"No existing transaction found for transaction marked with propagation 'mandatory'");
+			throw new IllegalTransactionStateException("No existing transaction found for transaction marked with propagation 'mandatory'");
 		}
+		// 当前线程没有事务 ——> 对于一下三种事务传播特性,需要重新
 		else if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRED ||
 				definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW ||
 				definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NESTED) {
+
+
 			SuspendedResourcesHolder suspendedResources = suspend(null);
 			if (debugEnabled) {
 				logger.debug("Creating new transaction with name [" + definition.getName() + "]: " + definition);
 			}
 			try {
 				boolean newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);
-				DefaultTransactionStatus status = newTransactionStatus(
-						definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
+                // 新建事务
+				DefaultTransactionStatus status = newTransactionStatus(definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
+                //
 				doBegin(transaction, definition);
+                // 准备同步
 				prepareSynchronization(status, definition);
 				return status;
 			}

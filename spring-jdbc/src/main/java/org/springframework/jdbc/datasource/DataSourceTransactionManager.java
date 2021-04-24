@@ -257,13 +257,16 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		Connection con = null;
 
 		try {
-			if (!txObject.hasConnectionHolder() ||
-					txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
+            // 开始之前没有已存在的连接  或者  如果有的话,当前连接是同步的.
+			if (!txObject.hasConnectionHolder() || txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
+                // 从数据源中获取新的数据库连接
 				Connection newCon = obtainDataSource().getConnection();
 				if (logger.isDebugEnabled()) {
 					logger.debug("Acquired Connection [" + newCon + "] for JDBC transaction");
 				}
+				// 设置数据库连接holder
 				txObject.setConnectionHolder(new ConnectionHolder(newCon), true);
+				txObject.getConnectionHolder().isSynchronizedWithTransaction()
 			}
 
 			txObject.getConnectionHolder().setSynchronizedWithTransaction(true);
@@ -425,6 +428,9 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 */
 	private static class DataSourceTransactionObject extends JdbcTransactionObjectSupport {
 
+        /**
+         * 是否为新创建的数据库连接
+         */
 		private boolean newConnectionHolder;
 
 		private boolean mustRestoreAutoCommit;
